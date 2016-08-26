@@ -8,8 +8,14 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agilepro.commons.models.admin.EmployeeModel;
+import com.agilepro.commons.models.customer.ProjectMemberModel;
+import com.agilepro.commons.models.project.StoryAndTaskResult;
 import com.agilepro.commons.models.project.StoryModel;
+import com.agilepro.persistence.entity.admin.DesignationEntity;
+import com.agilepro.persistence.entity.admin.ProjectMemberEntity;
 import com.agilepro.persistence.entity.project.StoryEntity;
+import com.agilepro.persistence.entity.project.TaskEntity;
 import com.agilepro.persistence.repository.project.IStoryRepository;
 import com.yukthi.persistence.ITransaction;
 import com.yukthi.persistence.repository.RepositoryFactory;
@@ -36,7 +42,15 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	 * The story repo.
 	 **/
 	private IStoryRepository storyRepo;
-	
+
+	/**
+	 * Instantiates a new StoryService.
+	 */
+	public StoryService()
+	{
+		super(StoryEntity.class, IStoryRepository.class);
+	}
+
 	/**
 	 * Initialize the iprojectMemberRepository.
 	 */
@@ -44,14 +58,6 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	private void init()
 	{
 		storyRepo = repositoryFactory.getRepository(IStoryRepository.class);
-	}
-	
-	/**
-	 * Instantiates a new StoryService.
-	 */
-	public StoryService()
-	{
-		super(StoryEntity.class, IStoryRepository.class);
 	}
 
 	/**
@@ -156,11 +162,12 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 
 		return storymodel;
 	}
-	
+
 	/**
 	 * fetch a stories by project id.
 	 *
-	 * @param projectId the project id
+	 * @param projectId
+	 *            the project id
 	 * @return the list
 	 */
 	public List<StoryModel> fetchStories(Long projectId)
@@ -177,7 +184,21 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 		}
 		return storiesmodel;
 	}
-	
+
+	public List<StoryAndTaskResult> searchByTitle(String title)
+	{
+		List<StoryEntity> storyEntities = storyRepo.findByTitle(title);
+		List<StoryAndTaskResult> storiesmodel = new ArrayList<StoryAndTaskResult>();
+		for(StoryEntity story : storyEntities)
+		{
+			StoryAndTaskResult storyandTask = new StoryAndTaskResult(story.getTitle(), story.getId());
+			storiesmodel.add(storyandTask);
+			System.out.println("in loop " + storyandTask);
+
+		}
+		return storiesmodel;
+	}
+
 	/**
 	 * Delete expense.
 	 *

@@ -30,13 +30,10 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 		$scope.sprintmodel;
 		
 		$scope.saveSprint = function(e) {
-		console.log("model is invoked " + $scope.sprintmodel);	
-//			
-//			$scope.sprintmodel = {
-//						"projectId" : projectId	
-//					};
-
-			 $scope.addEntry();		
+			console.log("model is invoked " + $scope.model);
+			
+			$scope.model.projectId = projectId;
+			$scope.saveChanges(e);
 		};
 
 		var readSprintCallBack = function(read, response){

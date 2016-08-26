@@ -1,27 +1,45 @@
 <div class="container-fluid" ng-controller="taskController" style="padding: 0px;">
 
-	<yk-search-query id="taskSearchQuery" title="Tasks" name="taskSearch">
+	<yk-search-query id="taskSearchQuery" title="Tasks" name="storyTaskSearch">
 		<action id="addTask" label="Add Task" color="blue" icon="glyphicon-plus" method="addEntry($event)" yk-for-role="TASK_EDIT,CUSTOMER_SUPER_USER"></action>
 		<action id="editTask" label="Edit Task" color="blue" icon="glyphicon-edit" method="editEntry($event)" row-action="true" yk-for-role="TASK_EDIT,CUSTOMER_SUPER_USER"></action>
 		<action id="deleteTask" label="Delete Task" color="red" icon="glyphicon-remove" method="deleteEntry($event)" row-action="true" yk-for-role="TASK_DELETE,CUSTOMER_SUPER_USER"></action>	
 			<result-customizer>
-				<div style="cursor: pointer;" search-row-id="0" ng-dblclick="changeRowSelection($index, $event); editEntry();" ng-repeat="result in searchResults "  ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' " ng-mouseover="changeRowSelection($index, $event);">
-					<table style="width: 100%; padding: 0px;  border-collapse: collapse; ">
-						<tr>
-							<td style="font-weight: bold; font-size: 0.7em; vertical-align: top; padding:0.5em; table-border:0.3em; text-transform: uppercase;">
-								<div class="text1" style=" margin-left: {{result.indent * 10}}px">{{result.title}}</div>
-							</td>
-							
-						</tr>
-					</table>
-				</div>
+						<div style="cursor: pointer;" search-row-id="0" ng-dblclick="changeRowSelection($index, $event); editEntry();"  
+							ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' "  
+							ng-repeat="result in searchResults " ng-mouseover="changeRowSelection($index, $event);">
+			
+							<table style="width: 100%; padding: 2px; border-collapse: collapse; "  >
+								
+								<tr>
+									<td>
+										<div ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' " 
+												ng-mouseover="changeRowSelection($index, $event);" 
+												style=" border: 2px solid black;  margin: 6px; background-color: papayawhip; font-weight: bold; font-size: 1em; vertical-align: top; padding:0.5em; table-border:0.3em; text-transform: uppercase;">
+											<div class="text1" style="border: 1px solid blue;border-radius: 0.5em; margin: 7px; padding: 3px;  margin-left: {{result.indent * 10}}px"  
+												ng-repeat="backlog in story ">{{backlog.title}}</br>
+												
+												<div> 	
+													{{result.id}}
+												</div>
+											
+												<div> 
+													<div> 
+														<input id="tasktextarea" type="text" placeholder="New Task title" 
+															ng-keyup="handleKeyPress($event);" ng-bind="model.title" />
+													</div>
+												</div>
+												
+											</div>
+											<br/>	
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
 		</result-customizer>
 	</yk-search-query>
 	
-	<yk-model-dialog id="taskDialog" name="TaskModel" title="Tasks" columns="2" actionMethod="saveChanges($event)"/>
-		<div> 
-			<input id="tasktextarea" type="text" name="textarea1" placeholder="New story title" ng-model="inlineTitle" ng-keyup="handleKeyPress($event);" ng-bind="model.title"/>
-		</div>
-		<br/>	
-	
+<yk-model-dialog id="taskDialog" name="TaskModel" title="Tasks" columns="2" actionMethod="saveChanges($event)"/>
+
 </div>

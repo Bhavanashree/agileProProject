@@ -223,4 +223,24 @@ public class TaskEntity extends WebutilsExtendableEntity
 	{
 		this.status = status;
 	}
+
+	public Double getActualtime()
+	{
+		return actualtime;
+	}
+
+	public void setActualtime(Double actualtime)
+	{
+		this.actualtime = actualtime;
+	}
+
+	public StoryEntity getStory()
+	{
+		return story;
+	}
+
+	public void setStory(StoryEntity story)
+	{
+		this.story = story;
+	}	
 }

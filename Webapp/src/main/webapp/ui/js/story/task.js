@@ -1,11 +1,11 @@
-$.application.controller('taskController', ["$scope", "crudController", function($scope, crudController) {
+$.application.controller('taskController', ["$scope", "crudController","utils","modelDefService", "validator","$state","actionHelper",
+                                            function($scope, crudController,utils, modelDefService, validator,$state,actionHelper) {
 	crudController.extend($scope, {
 		"name": "Task",
 		
 		"nameColumn" : "title",
 		
 		"modelDailogId": "taskDialog",
-		
 		
 		"saveAction": "task.save",
 		"readAction": "task.read",
@@ -14,37 +14,35 @@ $.application.controller('taskController', ["$scope", "crudController", function
 	});
 	
 	 $scope.handleKeyPress = function(e) {
-		 console.log("handleKeyPress is invoked " + $scope.inlineTitle);
+		 
+		 var element = $(e.target);
+		 console.log("handlekey press 2:   from save substories->  " +  element.val());
+	
 		 e = e || window.event;
 		 var key = e.keyCode ? e.keyCode : e.which;
 			  
 		 //enter key   
 			   if (key == 13) {   
-			         $scope.saveTask();
+			         $scope.saveTask(element.val());
 			      }
-	}
-		
-	 $scope.isDisplayElement = false;
+	};
+	
+		$scope.title = "";
+		$scope.isDisplayElement = false;
 		$scope.newModelMode = true;
-		$scope.model = {};
 
-		 var projectId;
+		var projectId;
 		//set title to model
-		$scope.saveTask= function(e){
+		$scope.saveTask= function(title){	
+			console.log("title model ");
 			
-			console.log("inlinetext:     " + $scope.inlineTitle );
+			$scope.model = {
+					"title" : title,
+					"story" : $scope.selectedId		
+				};
 			
-			$scope.model = {"title" : $scope.inlineTitle.trim(),
-					
-							"projectId" : projectId	
-							};
-			
-		    console.log("model is invoked===model====" + projectId); 
-
-		    console.log("model is invoked===model====" + $scope.model); 
-			$scope.initErrors("model", true);
-			$scope.newModelMode= 'Save';
-			$scope.saveChanges();
+				$scope.newModelMode= 'Save';
+				$scope.saveChanges();
 			
 			document.getElementById('tasktextarea').value=null;
 		 }
@@ -54,5 +52,23 @@ $.application.controller('taskController', ["$scope", "crudController", function
 			  return $scope.selectedIndex;
 		  };
 		  
-	
+		  
+			var readStoryCallBack = function(read, response){
+				$scope.story = read.model;	
+				var index;				
+					
+				for(index in $scope.story)
+				{
+					$scope.story[index].dragValue = false;
+				}
+									
+				$scope.$apply();					
+			};
+				
+			
+			$scope.listOfStories =function(event){
+				 console.log("liststories" );
+				 actionHelper.invokeAction("story.readAll",null,null,readStoryCallBack);
+			};
+				
 }]);

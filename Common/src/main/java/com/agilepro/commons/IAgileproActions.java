@@ -460,6 +460,10 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	 */
 	public String ACTION_TASK_READ = ACTION_PREFIX_TASK + DOT + ACTION_TYPE_READ;
 	/**
+	 *  The action backlog readall.
+	 **/
+	public String ACTION_TASK_READALL = ACTION_PREFIX_TASK + "." + ACTION_TYPE_READ_ALL;
+	/**
 	 * Task delete action name.
 	 */
 	public String ACTION_TASK_DELETE = ACTION_PREFIX_TASK + DOT + ACTION_TYPE_DELETE;
@@ -1034,5 +1038,4 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	 *  The action sprint delete all. 
 	 **/
 	public String ACTION_PRIORITY_DELETEALL = ACTION_PREFIX_PRIORITY+ "." + ACTION_TYPE_DELETE;
-
 }

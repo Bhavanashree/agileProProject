@@ -4,9 +4,12 @@ import static com.agilepro.commons.IAgileproActions.ACTION_PREFIX_TASK;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_DELETE;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_DELETE_ALL;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ;
+import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_ALL;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_SAVE;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_UPDATE;
 import static com.agilepro.commons.IAgileproActions.PARAM_ID;
+
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,9 +43,9 @@ import com.yukthi.webutils.controllers.BaseController;
 @RequestMapping("/task")
 public class TaskController extends BaseController implements ITaskController
 {
-	
+
 	/**
-	 *  The task service.
+	 * The task service.
 	 **/
 	@Autowired
 	private TaskService taskService;
@@ -66,8 +70,12 @@ public class TaskController extends BaseController implements ITaskController
 		return new BasicSaveResponse(entity.getId());
 	}
 
-	/* (non-Javadoc)
-	 * @see com.agilepro.commons.controllers.project.ITaskController#read(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.agilepro.commons.controllers.project.ITaskController#read(java.lang.
+	 * Long)
 	 */
 	@Override
 	@ActionName(ACTION_TYPE_READ)
@@ -81,8 +89,21 @@ public class TaskController extends BaseController implements ITaskController
 		return new BasicReadResponse<TaskModel>(taskModel);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.agilepro.commons.controllers.project.ITaskController#update(com.agilepro.commons.models.project.TaskModel)
+	@Override
+	@ActionName(ACTION_TYPE_READ_ALL)
+	@Authorization(entityIdExpression = "parameters[0]", roles = { UserRole.TASK_EDIT, UserRole.CUSTOMER_SUPER_USER })
+	@RequestMapping(value = "/readAll", method = RequestMethod.GET)
+	@ResponseBody
+	public BasicReadResponse<List<TaskModel>> fetchAllStories(@RequestParam(value = "storyId", required = false) Long storyId)
+	{
+		return new BasicReadResponse<List<TaskModel>>(taskService.fetchAllStories(storyId));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.agilepro.commons.controllers.project.ITaskController#update(com.
+	 * agilepro.commons.models.project.TaskModel)
 	 */
 	@ActionName(ACTION_TYPE_UPDATE)
 	@Authorization(entityIdExpression = "parameters[0].id", roles = { UserRole.TASK_UPDATE, UserRole.CUSTOMER_SUPER_USER })
@@ -100,8 +121,12 @@ public class TaskController extends BaseController implements ITaskController
 		return new BaseResponse();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.agilepro.commons.controllers.project.ITaskController#delete(java.lang.Long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.agilepro.commons.controllers.project.ITaskController#delete(java.lang
+	 * .Long)
 	 */
 	@ActionName(ACTION_TYPE_DELETE)
 	@Authorization(entityIdExpression = "parameters[0]", roles = { UserRole.TASK_DELETE, UserRole.CUSTOMER_SUPER_USER })
@@ -114,7 +139,9 @@ public class TaskController extends BaseController implements ITaskController
 		return new BaseResponse();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.agilepro.commons.controllers.project.ITaskController#deleteAll()
 	 */
 	@Authorization(roles = { UserRole.TASK_DELETE_ALL, UserRole.CUSTOMER_SUPER_USER })

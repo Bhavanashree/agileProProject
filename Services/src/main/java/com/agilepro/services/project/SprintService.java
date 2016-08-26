@@ -19,7 +19,6 @@ import com.yukthi.webutils.services.BaseCrudService;
 import com.yukthi.webutils.services.CurrentUserService;
 import com.yukthi.webutils.utils.WebUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SprintService is responsible to save,read,update and delete the
  * sprints.

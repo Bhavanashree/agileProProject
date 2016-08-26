@@ -11,7 +11,7 @@
 						</select>
 					</tr>				
 					<tr style="padding: 0.1em 0.5em; text-align: right;">
-						<a role="button" ng-click="saveSprint($event)" style="text-decoration: none; color: blue; font-size: 1.3em;" class="yk-icon-link" data-toggle="tooltip" title="Add Sprint">
+						<a role="button" ng-click="addEntry($event)" style="text-decoration: none; color: blue; font-size: 1.3em;" class="yk-icon-link" data-toggle="tooltip" title="Add Sprint">
 							<i class="glyphicon glyphicon-plus"/>
 						</a>
 						<a role="button" ng-click="editSprint(selectedSprintObj)" style="text-decoration: none; color: blue; font-size: 1.3em;" class="yk-icon-link" data-toggle="tooltip" title="Edit Sprint">
@@ -25,7 +25,7 @@
 				<div class="panel-heading"  style = "background-color : papayawhip;">BACKLOG</div>
 					<div id={{backlog}} draggable="true" yk-on-drag ="dragToProgress(event)" ng-repeat="backlog in story  | filter: orderBy:'title'" 
 						style = "background-color : lightpink; margin:10px; border-radius: 25px; width :150px; height : 150px; border: 1px solid grey; padding: 25px; cursor:-moz-grabbing; " >
-							<div style =" text-align:left;  text-transform: uppercase;">{{backlog.title}}</br>( {{backlog.estimate}} )</div>						
+							<div style =" text-align:left;font-size: 0.5em;  text-transform: uppercase;">{{backlog.title}}</br>( {{backlog.estimate}} )</div>						
 					</div>
 			</div>
 				
@@ -60,5 +60,5 @@
 			</div>
 		</div>
 	</result-customizer>
-	<yk-model-dialog id="sprintDialog" name="SprintModel" title="Sprint" columns="2" actionMethod="saveChanges($event);"/>
+	<yk-model-dialog id="sprintDialog" name="SprintModel" title="Sprint" columns="2" actionMethod="saveSprint($event)"/>
 </div>

@@ -1,11 +1,20 @@
 package com.agilepro.services.project;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.agilepro.commons.models.project.StoryAndTaskResult;
+import com.agilepro.commons.models.project.StoryModel;
 import com.agilepro.commons.models.project.TaskModel;
 import com.agilepro.controller.CbillerUserDetails;
+import com.agilepro.persistence.entity.project.StoryEntity;
 import com.agilepro.persistence.entity.project.TaskEntity;
+import com.agilepro.persistence.repository.project.IStoryRepository;
 import com.agilepro.persistence.repository.project.ITaskRepository;
 import com.agilepro.services.admin.CustomerService;
 import com.yukthi.persistence.ITransaction;
@@ -33,6 +42,20 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 	 */
 	@Autowired
 	private CustomerService customerService;
+
+	/**
+	 * The story repo.
+	 **/
+	private ITaskRepository taskRepo;
+
+	/**
+	 * Initialize the iprojectMemberRepository.
+	 */
+	@PostConstruct
+	private void init()
+	{
+		taskRepo = repositoryFactory.getRepository(ITaskRepository.class);
+	}
 
 	/**
 	 * Instantiates a new sprint service.
@@ -90,6 +113,46 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 		{
 			throw new InvalidStateException(ex, "An error occurred while updating model - {}", model);
 		}
+	}
+
+	public List<TaskModel> fetchAllStories(Long storyId)
+	{
+		List<TaskModel> taskmodel = null;
+		taskRepo = repositoryFactory.getRepository(ITaskRepository.class);
+		List<TaskEntity> taskentity = taskRepo.fetchAllStories(storyId);
+		if(taskentity != null)
+		{
+			taskmodel = new ArrayList<TaskModel>(taskentity.size());
+			for(TaskEntity entity : taskentity)
+			{
+				taskmodel.add(super.toModel(entity, TaskModel.class));
+			}
+		}
+
+		return taskmodel;
+	}
+
+	public List<StoryAndTaskResult> searchByStory(Long storyId)
+	{
+		List<StoryAndTaskResult> storiesmodel = null;
+
+		taskRepo = repositoryFactory.getRepository(ITaskRepository.class);
+		List<TaskEntity> taskEntity = taskRepo.findByStoryId(storyId);
+
+		if(taskEntity != null)
+		{
+
+			storiesmodel = new ArrayList<StoryAndTaskResult>((taskEntity.size()));
+			System.out.println("taskservicessssssss" + storyId);
+
+			for(TaskEntity task : taskEntity)
+			{
+				StoryAndTaskResult storyandTask = new StoryAndTaskResult(task.getTitle(), task.getId());
+				storiesmodel.add(storyandTask);
+				System.out.println("in loop " + storyandTask);
+			}
+		}
+		return storiesmodel;
 	}
 
 	/**
