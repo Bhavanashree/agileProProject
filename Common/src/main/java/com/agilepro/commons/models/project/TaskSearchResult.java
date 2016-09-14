@@ -33,14 +33,26 @@ public class TaskSearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Estimation.
 	 */
-	@Field(value = "estimate")
-	private Integer estimate;
+	@Field(value = "actualTime")
+	private Long actualTime;
 
 	/**
 	 * The status.
 	 */
 	@Field(value = "status")
 	private String status;
+
+	/**
+	 * The time taken.
+	 **/
+	@Field(value = "timeTaken")
+	private Long timeTaken;
+
+	/**
+	 * The extra time.
+	 **/
+	@Field(value = "extraTime")
+	private Long extraTime;
 
 	/**
 	 * Gets the id.
@@ -55,7 +67,8 @@ public class TaskSearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Sets the id.
 	 *
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(long id)
 	{
@@ -75,7 +88,8 @@ public class TaskSearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Sets the title.
 	 *
-	 * @param title the new title
+	 * @param title
+	 *            the new title
 	 */
 	public void setTitle(String title)
 	{
@@ -95,31 +109,12 @@ public class TaskSearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Sets the description.
 	 *
-	 * @param description the new description
+	 * @param description
+	 *            the new description
 	 */
 	public void setDescription(String description)
 	{
 		this.description = description;
-	}
-
-	/**
-	 * Gets the estimate.
-	 *
-	 * @return the estimate
-	 */
-	public Integer getEstimate()
-	{
-		return estimate;
-	}
-
-	/**
-	 * Sets the estimate.
-	 *
-	 * @param estimate the new estimate
-	 */
-	public void setEstimate(Integer estimate)
-	{
-		this.estimate = estimate;
 	}
 
 	/**
@@ -135,10 +130,52 @@ public class TaskSearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Sets the status.
 	 *
-	 * @param status the new status
+	 * @param status
+	 *            the new status
 	 */
 	public void setStatus(String status)
 	{
 		this.status = status;
+	}
+
+	public Long getActualTime()
+	{
+		return actualTime;
+	}
+
+	public void setActualTime(Long actualTime)
+	{
+		this.actualTime = actualTime;
+	}
+
+	/**
+	 * Gets the time taken.
+	 *
+	 * @return the time taken
+	 */
+	public Long getTimeTaken()
+	{
+		return timeTaken;
+	}
+
+	/**
+	 * Sets the time taken.
+	 *
+	 * @param timeTaken
+	 *            the new time taken
+	 */
+	public void setTimeTaken(Long timeTaken)
+	{
+		this.timeTaken = timeTaken;
+	}
+
+	public Long getExtraTime()
+	{
+		return extraTime;
+	}
+
+	public void setExtraTime(Long extraTime)
+	{
+		this.extraTime = extraTime;
 	}
 }
