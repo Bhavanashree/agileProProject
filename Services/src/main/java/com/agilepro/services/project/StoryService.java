@@ -174,15 +174,15 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	{
 		List<StoryEntity> storyEntity = storyRepo.fetchstoryByProjId(projectId);
 
-		List<StoryModel> storiesmodel = new ArrayList<StoryModel>();
+		List<StoryModel> storiesmodels = new ArrayList<StoryModel>();
 
 		StoryModel storyModel;
 		for(StoryEntity stories : storyEntity)
 		{
 			storyModel = super.toModel(stories, StoryModel.class);
-			storiesmodel.add(storyModel);
+			storiesmodels.add(storyModel);
 		}
-		return storiesmodel;
+		return storiesmodels;
 	}
 
 	public List<StoryAndTaskResult> searchByTitle(String title)
@@ -225,7 +225,7 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 			transaction.commit();
 		} catch(Exception ex)
 		{
-			throw new IllegalStateException("An error occurred while deleting expenses - " + parentStoryId, ex);
+			throw new IllegalStateException("An error occurred while deleting story - " + parentStoryId, ex);
 		}
 	}
 

@@ -9,17 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.agilepro.commons.models.project.StoryAndTaskResult;
-import com.agilepro.commons.models.project.StoryModel;
 import com.agilepro.commons.models.project.TaskModel;
 import com.agilepro.controller.CbillerUserDetails;
-import com.agilepro.persistence.entity.project.StoryEntity;
 import com.agilepro.persistence.entity.project.TaskEntity;
-import com.agilepro.persistence.repository.project.IStoryRepository;
 import com.agilepro.persistence.repository.project.ITaskRepository;
 import com.agilepro.services.admin.CustomerService;
 import com.yukthi.persistence.ITransaction;
 import com.yukthi.utils.exceptions.InvalidStateException;
 import com.yukthi.utils.exceptions.NullValueException;
+import com.yukthi.webutils.InvalidRequestParameterException;
 import com.yukthi.webutils.services.BaseCrudService;
 import com.yukthi.webutils.services.CurrentUserService;
 import com.yukthi.webutils.utils.WebUtils;
@@ -30,10 +28,10 @@ import com.yukthi.webutils.utils.WebUtils;
 @Service
 public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 {
+
 	/**
-	 * 
-	 * /** Used to fetch current user info.
-	 */
+	 * The current user service.
+	 **/
 	@Autowired
 	private CurrentUserService currentUserService;
 
@@ -49,20 +47,20 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 	private ITaskRepository taskRepo;
 
 	/**
+	 * Instantiates a new sprint service.
+	 */
+	public TaskService()
+	{
+		super(TaskEntity.class, ITaskRepository.class);
+	}
+
+	/**
 	 * Initialize the iprojectMemberRepository.
 	 */
 	@PostConstruct
 	private void init()
 	{
 		taskRepo = repositoryFactory.getRepository(ITaskRepository.class);
-	}
-
-	/**
-	 * Instantiates a new sprint service.
-	 */
-	public TaskService()
-	{
-		super(TaskEntity.class, ITaskRepository.class);
 	}
 
 	/**
@@ -93,7 +91,7 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 	 *            the model
 	 * @return the sprint entity
 	 */
-	public TaskEntity update(TaskModel model)
+	public TaskEntity updateTask(TaskModel model)
 	{
 		if(model == null)
 		{
@@ -103,7 +101,7 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 		try(ITransaction transaction = repository.newOrExistingTransaction())
 		{
 			// updating campaign
-			TaskEntity taskEntity = super.update(model);
+			TaskEntity taskEntity = super.repository.findById(model.getId());
 			transaction.commit();
 			return taskEntity;
 		} catch(RuntimeException ex)
@@ -115,11 +113,54 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 		}
 	}
 
+	/**
+	 * Update task model.
+	 *
+	 * @param model
+	 *            the model
+	 * @return the integer
+	 */
+	public Integer updateTaskModel(TaskModel model)
+	{
+		try(ITransaction transaction = repository.newOrExistingTransaction())
+		{
+			Long timeTaken = model.getTimeTaken();
+			Long modelExtraTime = model.getExtraTime();
+			if(timeTaken == null)
+			{
+				model.setTimeTaken(modelExtraTime);
+			}
+			else
+			{
+				model.setTimeTaken(timeTaken + modelExtraTime);
+			}
+			System.out.println(" +++++++++******************************************" + timeTaken + " " + modelExtraTime);
+
+			super.update(model);
+			transaction.commit();
+
+			TaskEntity updateEntity = super.fetch(model.getId());
+
+			return updateEntity.getVersion();
+		} catch(Exception ex)
+		{
+			throw new IllegalStateException("An error occurred while updating tasks - " + model, ex);
+		}
+	}
+
+	/**
+	 * Fetch all stories.
+	 *
+	 * @param storyId
+	 *            the story id
+	 * @return the list
+	 */
 	public List<TaskModel> fetchAllStories(Long storyId)
 	{
 		List<TaskModel> taskmodel = null;
 		taskRepo = repositoryFactory.getRepository(ITaskRepository.class);
 		List<TaskEntity> taskentity = taskRepo.fetchAllStories(storyId);
+		System.out.println(" hello        --------------->" + storyId);
 		if(taskentity != null)
 		{
 			taskmodel = new ArrayList<TaskModel>(taskentity.size());
@@ -132,6 +173,13 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 		return taskmodel;
 	}
 
+	/**
+	 * Search by story.
+	 *
+	 * @param storyId
+	 *            the story id
+	 * @return the list
+	 */
 	public List<StoryAndTaskResult> searchByStory(Long storyId)
 	{
 		List<StoryAndTaskResult> storiesmodel = null;
@@ -153,6 +201,36 @@ public class TaskService extends BaseCrudService<TaskEntity, ITaskRepository>
 			}
 		}
 		return storiesmodel;
+	}
+
+	/**
+	 * Delete task.
+	 *
+	 * @param TaskId
+	 *            the task id
+	 */
+	public void deleteTask(long TaskId)
+	{
+		try(ITransaction transaction = repository.newOrExistingTransaction())
+		{
+
+			TaskEntity taskEntity = super.repository.findById(TaskId);
+
+			if(taskEntity == null)
+			{
+				throw new InvalidRequestParameterException("Invalid taskId id specified - " + TaskId);
+			}
+
+			Long tskId = taskEntity.getId();
+
+			// delete backlogEntity
+			super.deleteById(taskEntity.getId());
+
+			transaction.commit();
+		} catch(Exception ex)
+		{
+			throw new IllegalStateException("An error occurred while deleting task - " + TaskId, ex);
+		}
 	}
 
 	/**

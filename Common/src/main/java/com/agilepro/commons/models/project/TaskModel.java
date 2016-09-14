@@ -46,9 +46,19 @@ public class TaskModel extends AbstractExtendableModel
 	private String description;
 
 	/**
-	 * The estimate.
+	 * The timeTaken.
 	 **/
-	private Integer estimate;
+	private Long timeTaken;
+
+	/**
+	 * The extra time.
+	 **/
+	private Long extraTime;
+
+	/**
+	 * The actual time.
+	 **/
+	private Long actualTime;
 
 	/**
 	 * The owner id.
@@ -67,11 +77,10 @@ public class TaskModel extends AbstractExtendableModel
 	@NonDisplayable
 	private Long projectId;
 
-	private Long story;
 	/**
-	 * The actual time.
+	 * The story.
 	 **/
-	private Double actualTime;
+	private Long storyId;
 
 	/**
 	 * Instantiates a new task model.
@@ -164,27 +173,6 @@ public class TaskModel extends AbstractExtendableModel
 	}
 
 	/**
-	 * Gets the estimate.
-	 *
-	 * @return the estimate
-	 */
-	public Integer getEstimate()
-	{
-		return estimate;
-	}
-
-	/**
-	 * Sets the estimate.
-	 *
-	 * @param estimate
-	 *            the new estimate
-	 */
-	public void setEstimate(Integer estimate)
-	{
-		this.estimate = estimate;
-	}
-
-	/**
 	 * Gets the owner id.
 	 *
 	 * @return the owner id
@@ -248,11 +236,53 @@ public class TaskModel extends AbstractExtendableModel
 	}
 
 	/**
+	 * Gets the story id.
+	 *
+	 * @return the story id
+	 */
+	public Long getStoryId()
+	{
+		return storyId;
+	}
+
+	/**
+	 * Sets the story id.
+	 *
+	 * @param storyId
+	 *            the new story id
+	 */
+	public void setStoryId(Long storyId)
+	{
+		this.storyId = storyId;
+	}
+
+	/**
+	 * Gets the time taken.
+	 *
+	 * @return the time taken
+	 */
+	public Long getTimeTaken()
+	{
+		return timeTaken;
+	}
+
+	/**
+	 * Sets the time taken.
+	 *
+	 * @param timeTaken
+	 *            the new time taken
+	 */
+	public void setTimeTaken(Long timeTaken)
+	{
+		this.timeTaken = timeTaken;
+	}
+
+	/**
 	 * Gets the actual time.
 	 *
 	 * @return the actual time
 	 */
-	public Double getActualTime()
+	public Long getActualTime()
 	{
 		return actualTime;
 	}
@@ -263,18 +293,29 @@ public class TaskModel extends AbstractExtendableModel
 	 * @param actualTime
 	 *            the new actual time
 	 */
-	public void setActualTime(Double actualTime)
+	public void setActualTime(Long actualTime)
 	{
 		this.actualTime = actualTime;
 	}
 
-	public Long getStory()
+	/**
+	 * Gets the extra time.
+	 *
+	 * @return the extra time
+	 */
+	public Long getExtraTime()
 	{
-		return story;
+		return extraTime;
 	}
 
-	public void setStory(Long story)
+	/**
+	 * Sets the extra time.
+	 *
+	 * @param extraTime
+	 *            the new extra time
+	 */
+	public void setExtraTime(Long extraTime)
 	{
-		this.story = story;
+		this.extraTime = extraTime;
 	}
 }

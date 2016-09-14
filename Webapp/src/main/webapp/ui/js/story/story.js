@@ -53,10 +53,7 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			
 			console.log("inlinetext:     " + $scope.inlineTitle );
 			
-			$scope.model = {"title" : $scope.inlineTitle.trim(),
-					
-							"projectId" : projectId	
-							};
+			$scope.model = {"title" : $scope.inlineTitle.trim(),"projectId" : projectId	};
 			
 		    console.log("model is invoked===model====" + projectId); 
 
@@ -64,8 +61,8 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			$scope.initErrors("model", true);
 			$scope.newModelMode= 'Save';
 			$scope.saveChanges();
-			
-			document.getElementById('parentStorytextarea').value=null;
+			$("#parentStorytextarea").val(null);
+		
 			$scope.refreshSearch();
 		 }
 
@@ -92,11 +89,12 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			  return $scope.selectedIndex;
 		  };
 		  
-		  //
-			var updatefetchStoriesByProjectId = function(re, res){
+		
+			var updatefetchStoriesByProjectId = function(readResponse, respConfig){
 				console.log("updateStoryByProjectId");
-				var model = re.model;
-				console.log("model1--", re.model);
+				var model = readResponse.model;
+				
+				console.log("$scope.searchResults = " + model.title);
 				
 				try
 				{
@@ -120,6 +118,8 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			
 			// Listener for broadcast
 			$scope.$on("activeProjectSelectionChanged", function(event, args) {
+				projectId = $scope.getActiveProject();
+				
 				$scope.fetchStoriesByProjectId();
 			   
 			});

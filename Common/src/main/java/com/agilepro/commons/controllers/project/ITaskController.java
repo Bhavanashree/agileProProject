@@ -1,6 +1,9 @@
 package com.agilepro.commons.controllers.project;
 
-import com.agilepro.commons.models.project.StoryModel;
+import java.util.List;
+
+import com.agilepro.commons.BasicVersionResponse;
+import com.agilepro.commons.models.project.StoryAndTaskResult;
 import com.agilepro.commons.models.project.TaskModel;
 import com.yukthi.webutils.common.RemoteService;
 import com.yukthi.webutils.common.models.BaseResponse;
@@ -11,7 +14,8 @@ import com.yukthi.webutils.common.models.BasicSaveResponse;
  * The Interface IStoryController.
  */
 @RemoteService
-public interface ITaskController {
+public interface ITaskController
+{
 
 	/**
 	 * Save.
@@ -31,6 +35,8 @@ public interface ITaskController {
 	 */
 	public BasicReadResponse<TaskModel> read(Long id);
 
+	public BasicReadResponse<List<TaskModel>> fetchAllStories(Long storyId);
+
 	/**
 	 * Update.
 	 *
@@ -38,7 +44,7 @@ public interface ITaskController {
 	 *            the model
 	 * @return the base response
 	 */
-	public BaseResponse update(TaskModel model);
+	public BasicVersionResponse update(TaskModel model);
 
 	/**
 	 * Delete.
@@ -55,4 +61,5 @@ public interface ITaskController {
 	 * @return the base response
 	 */
 	public BaseResponse deleteAll();
+
 }

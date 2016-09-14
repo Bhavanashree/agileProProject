@@ -5,10 +5,8 @@ import java.util.List;
 import com.agilepro.commons.models.project.StoryAndTaskResult;
 import com.agilepro.commons.models.project.StorySearchQuery;
 import com.agilepro.commons.models.project.StorySearchResult;
-import com.agilepro.commons.models.project.TaskSearchQuery;
 import com.agilepro.persistence.entity.project.StoryEntity;
 import com.agilepro.services.common.StorySearchCustomizer;
-import com.agilepro.services.common.TaskSearchCustomizer;
 import com.yukthi.persistence.repository.annotations.Condition;
 import com.yukthi.persistence.repository.annotations.OrderBy;
 import com.yukthi.persistence.repository.search.SearchQuery;
@@ -36,7 +34,7 @@ public interface IStoryRepository extends IWebutilsRepository<StoryEntity>
 	public List<StorySearchResult> findStories(SearchQuery searchQuery);
 
 	@RestrictBySpace
-	@SearchQueryMethod(name = "storyTaskSearch", queryModel = TaskSearchQuery.class, customizer = TaskSearchCustomizer.class)
+	@SearchQueryMethod(name = "storyTaskSearch", queryModel = StorySearchQuery.class)
 	public List<StoryAndTaskResult> findByStories(SearchQuery searchQuery);
 	
 	@RestrictBySpace

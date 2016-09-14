@@ -4,12 +4,13 @@
 		<action id="editBacklog" label="Edit backlog " color="blue" icon="glyphicon-edit" method="editEntry($event)" row-action="true"/>
 		<action id="deleteBacklogStory" label="Delete backlog " color="red" icon="glyphicon-remove" method="deleteEntry($event)" row-action="true"/>
 		<result-customizer>
-			<div style="cursor: pointer;" search-row-id="0" ng-dblclick="changeRowSelection($index, $event); editEntry();" ng-repeat="result in searchResults "  ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' " ng-mouseover="changeRowSelection($index, $event);">
+			<div style="cursor: pointer;" search-row-id="0" ng-dblclick="changeRowSelection($index, $event); editEntry();" ng-repeat="result in searchResults"  ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' " ng-mouseover="changeRowSelection($index, $event);">
 				<table style="width: 100%; padding: 0px;  border-collapse: collapse; ">
 					<tr>
 						<td style="font-weight: bold; font-size: 0.7em; vertical-align: top; padding:0.5em; table-border:0.3em; text-transform: uppercase;">
 							<div class="text1" style=" margin-left: {{result.indent * 10}}px">{{result.title}} - - - - {{result.parentStoryId}}</div>
 						</td>
+						
 						<td>
 							<div style="text-align: right; vertical-align: top;" ng-class="getActiveIndex()==$index ? 'displayIcon' : 'displayHidden'">
 								<a role="button" ng-click="changeRowSelection($index, $event); addEntry($event);" style="text-decoration: none; color: blue; font-size: 0.9em;" class="yk-icon-link" data-toggle="tooltip" title="Add">
@@ -32,6 +33,7 @@
 			</div>
 		</result-customizer>
 	</yk-search-query>
+	
 	<yk-model-dialog id="storyDialog" name="StoryModel" title="Story" columns="2" actionMethod="saveChanges($event)"/>
 	<div> 
 		<input id="parentStorytextarea" type="text" name="textarea1" placeholder="New story title" ng-model="inlineTitle" ng-keyup="handleKeyPress($event);" ng-bind="model.title"/>

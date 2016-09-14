@@ -302,6 +302,8 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	public String ACTION_TYPE_READ_STORY_PROJECT_ID = "storyProjectId";
 
 	public String ACTION_TYPE_READ_SPRINT_PROJECT_ID = "sprintProjectId";
+
+	public String ACTION_TYPE_READ_STORY_ID = "readStoryId";
 	
 	/**
 	 *  The action prefix sprint. 
@@ -463,6 +465,10 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	 *  The action backlog readall.
 	 **/
 	public String ACTION_TASK_READALL = ACTION_PREFIX_TASK + "." + ACTION_TYPE_READ_ALL;
+	
+
+	public String ACTION_TASK_READ_ID = ACTION_PREFIX_TASK + "." + ACTION_TYPE_READ_STORY_ID;
+	
 	/**
 	 * Task delete action name.
 	 */
@@ -959,6 +965,7 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	 *  The action sprint read.
 	 **/
 	public String ACTION_STORY_READSPRINT = ACTION_PREFIX_STORY + "." + ACTION_TYPE_READ_SPRINT;
+
 	/**
 	 * The action backlog update.
 	 **/

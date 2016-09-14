@@ -39,8 +39,8 @@ public class TaskEntity extends WebutilsExtendableEntity
 	/**
 	 * The estimation of time.
 	 **/
-	@Column(name = "ESTIMATE")
-	private Integer estimate;
+	@Column(name = "TIME_TAKEN")
+	private Long timeTaken;
 	/**
 	 * The project id.
 	 */
@@ -68,11 +68,14 @@ public class TaskEntity extends WebutilsExtendableEntity
 	 * The actualTime.
 	 **/
 	@Column(name = "ACTUAL_TIME")
-	private Double actualtime;
+	private Long actualTime;
 
+	/**
+	 * list of stories.
+	 */
 	@Column(name = "STORY_ID")
 	@ManyToOne
-	@PropertyMapping(type = TaskModel.class, from = "story", subproperty = "id")
+	@PropertyMapping(type = TaskModel.class, from = "storyId", subproperty = "id")
 	private StoryEntity story;
 
 	/**
@@ -88,14 +91,17 @@ public class TaskEntity extends WebutilsExtendableEntity
 	 *            the title
 	 * @param description
 	 *            the description
-	 * @param estimate
-	 *            the estimate
+	 * @param timeTaken
+	 *            the time taken
+	 * @param actualTime
+	 *            the actual time
 	 */
-	public TaskEntity(String title, String description, Integer estimate)
+	public TaskEntity(String title, String description, Long timeTaken, Long actualTime)
 	{
 		this.title = title;
 		this.description = description;
-		this.estimate = estimate;
+		this.timeTaken = timeTaken;
+		this.actualTime = actualTime;
 	}
 
 	/**
@@ -138,27 +144,6 @@ public class TaskEntity extends WebutilsExtendableEntity
 	public void setDescription(String description)
 	{
 		this.description = description;
-	}
-
-	/**
-	 * Gets the estimate.
-	 *
-	 * @return the estimate
-	 */
-	public Integer getEstimate()
-	{
-		return estimate;
-	}
-
-	/**
-	 * Sets the estimate.
-	 *
-	 * @param estimate
-	 *            the new estimate
-	 */
-	public void setEstimate(Integer estimate)
-	{
-		this.estimate = estimate;
 	}
 
 	/**
@@ -224,23 +209,56 @@ public class TaskEntity extends WebutilsExtendableEntity
 		this.status = status;
 	}
 
-	public Double getActualtime()
-	{
-		return actualtime;
-	}
-
-	public void setActualtime(Double actualtime)
-	{
-		this.actualtime = actualtime;
-	}
-
+	/**
+	 * Gets the story.
+	 *
+	 * @return the story
+	 */
 	public StoryEntity getStory()
 	{
 		return story;
 	}
 
+	/**
+	 * Sets the story.
+	 *
+	 * @param story
+	 *            the new story
+	 */
 	public void setStory(StoryEntity story)
 	{
 		this.story = story;
-	}	
+	}
+
+	/**
+	 * Gets the time taken.
+	 *
+	 * @return the time taken
+	 */
+	public Long getTimeTaken()
+	{
+		return timeTaken;
+	}
+
+	/**
+	 * Sets the time taken.
+	 *
+	 * @param timeTaken
+	 *            the new time taken
+	 */
+	public void setTimeTaken(Long timeTaken)
+	{
+		this.timeTaken = timeTaken;
+	}
+
+	public Long getActualTime()
+	{
+		return actualTime;
+	}
+
+	public void setActualTime(Long actualTime)
+	{
+		this.actualTime = actualTime;
+	}
+
 }

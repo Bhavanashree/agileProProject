@@ -187,7 +187,7 @@ public class StoryController extends BaseController implements IStoryController
 	@ResponseBody
 	public BaseResponse delete(@PathVariable(PARAM_ID) Long id)
 	{
-		storyService.deleteById(id);
+		storyService.deleteParentId(id);
 
 		return new BaseResponse();
 	}

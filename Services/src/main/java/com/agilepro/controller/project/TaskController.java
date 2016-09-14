@@ -4,7 +4,7 @@ import static com.agilepro.commons.IAgileproActions.ACTION_PREFIX_TASK;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_DELETE;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_DELETE_ALL;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ;
-import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_ALL;
+import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_STORY_ID;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_SAVE;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_UPDATE;
 import static com.agilepro.commons.IAgileproActions.PARAM_ID;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.agilepro.commons.BasicVersionResponse;
 import com.agilepro.commons.UserRole;
 import com.agilepro.commons.controllers.project.ITaskController;
 import com.agilepro.commons.models.project.TaskModel;
@@ -90,11 +91,11 @@ public class TaskController extends BaseController implements ITaskController
 	}
 
 	@Override
-	@ActionName(ACTION_TYPE_READ_ALL)
+	@ActionName(ACTION_TYPE_READ_STORY_ID)
 	@Authorization(entityIdExpression = "parameters[0]", roles = { UserRole.TASK_EDIT, UserRole.CUSTOMER_SUPER_USER })
-	@RequestMapping(value = "/readAll", method = RequestMethod.GET)
+	@RequestMapping(value = "/readStoryId", method = RequestMethod.GET)
 	@ResponseBody
-	public BasicReadResponse<List<TaskModel>> fetchAllStories(@RequestParam(value = "storyId", required = false) Long storyId)
+	public BasicReadResponse<List<TaskModel>> fetchAllStories(@RequestParam(value = "storyId", required = true) Long storyId)
 	{
 		return new BasicReadResponse<List<TaskModel>>(taskService.fetchAllStories(storyId));
 	}
@@ -109,16 +110,16 @@ public class TaskController extends BaseController implements ITaskController
 	@Authorization(entityIdExpression = "parameters[0].id", roles = { UserRole.TASK_UPDATE, UserRole.CUSTOMER_SUPER_USER })
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public BaseResponse update(@RequestBody @Valid TaskModel model)
+	public BasicVersionResponse update(@RequestBody @Valid TaskModel model)
 	{
 		if(model.getId() == null || model.getId() <= 0)
 		{
 			throw new InvalidRequestParameterException("Invalid id specified for update: " + model.getId());
 		}
 
-		taskService.update(model);
+		Integer updatedVersion = taskService.updateTaskModel(model);
 
-		return new BaseResponse();
+		return new BasicVersionResponse(updatedVersion);
 	}
 
 	/*
@@ -134,7 +135,7 @@ public class TaskController extends BaseController implements ITaskController
 	@ResponseBody
 	public BaseResponse delete(@PathVariable(PARAM_ID) Long id)
 	{
-		taskService.deleteById(id);
+		taskService.deleteTask(id);
 
 		return new BaseResponse();
 	}

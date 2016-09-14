@@ -1,45 +1,71 @@
 <div class="container-fluid" ng-controller="taskController" style="padding: 0px;">
-
 	<yk-search-query id="taskSearchQuery" title="Tasks" name="storyTaskSearch">
 		<action id="addTask" label="Add Task" color="blue" icon="glyphicon-plus" method="addEntry($event)" yk-for-role="TASK_EDIT,CUSTOMER_SUPER_USER"></action>
 		<action id="editTask" label="Edit Task" color="blue" icon="glyphicon-edit" method="editEntry($event)" row-action="true" yk-for-role="TASK_EDIT,CUSTOMER_SUPER_USER"></action>
 		<action id="deleteTask" label="Delete Task" color="red" icon="glyphicon-remove" method="deleteEntry($event)" row-action="true" yk-for-role="TASK_DELETE,CUSTOMER_SUPER_USER"></action>	
-			<result-customizer>
-						<div style="cursor: pointer;" search-row-id="0" ng-dblclick="changeRowSelection($index, $event); editEntry();"  
-							ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' "  
-							ng-repeat="result in searchResults " ng-mouseover="changeRowSelection($index, $event);">
+		<result-customizer>			
+			<div style="width: 100%; height:100%; background-color: pale;">
+				<ul class="tree" style="list-style: none;"> 
 			
-							<table style="width: 100%; padding: 2px; border-collapse: collapse; "  >
-								
-								<tr>
-									<td>
-										<div ng-class="getActiveIndex()==$index ? 'borderhover' : 'hoverDiv' " 
-												ng-mouseover="changeRowSelection($index, $event);" 
-												style=" border: 2px solid black;  margin: 6px; background-color: papayawhip; font-weight: bold; font-size: 1em; vertical-align: top; padding:0.5em; table-border:0.3em; text-transform: uppercase;">
-											<div class="text1" style="border: 1px solid blue;border-radius: 0.5em; margin: 7px; padding: 3px;  margin-left: {{result.indent * 10}}px"  
-												ng-repeat="backlog in story ">{{backlog.title}}</br>
-												
-												<div> 	
-													{{result.id}}
-												</div>
+	 				<li ng-repeat="result in searchResults"  >
+	 						<img ng-src="{{result.booleanVal == true ? minusImage : plusImage}}" width=20 height=20 ng-click="listOfStories(result)"/>
+	 						
+	 						<label style="color: #66758e;text-transform: uppercase;">{{result.title}}</label>								
+	 							
+	 							<table style ="padding: 0px;margin-left:30px; border-collapse: collapse;" ng-if="result.booleanVal == true">
+									<tr style ="border:2px solid #b3a6a6;" ng-dblclick="changeRowSelection($index, $event); editEntry();" ng-repeat= "taskresult in strIdTskListMap[result.id]">
+									
+										<td style = "padding: 3px;box-sizing: border-box; border-radius: 4px;"  >
+	        								<input style = "max-width: 20em; min-width: 10em;" id="{{taskresult}}" name="title"  type="text" placeholder="updateTask title"  
+	        									ng-model="taskresult.title"  ng-blur ="taskEdit(taskresult)"/>
+										</td>
+																		
+										<td style = "padding: 3px;box-sizing: border-box; border-radius: 4px;">
+											<span style="background-color: silver; border-radius: 10px; min-width: 2em; max-width: 12em;
+													padding-bottom: 3px;padding-top: 3px;  padding-left: 7em; padding-right: 7em; width: 20%;">
+													{{taskresult.actualTime}}
+											</span>
+										</td>
 											
-												<div> 
-													<div> 
-														<input id="tasktextarea" type="text" placeholder="New Task title" 
-															ng-keyup="handleKeyPress($event);" ng-bind="model.title" />
-													</div>
-												</div>
-												
-											</div>
-											<br/>	
-										</div>
-									</td>
-								</tr>
-							</table>
-						</div>
+										<td style = "padding: 3px;margin: 4px;box-sizing: border-box; border-radius: 4px;">
+											 <yk-lov-field name="taskStatus" model="taskresult.status" on-change="taskEdit(taskresult)" label="task status" lov="com.agilepro.commons.TaskStatus"  type="STATIC_TYPE"  />
+										</td>	
+										
+										<td style = "padding: 3px;box-sizing: border-box; border-radius: 4px;">
+										<span style="background-color: silver; border-radius: 10px; min-width: 2em; max-width: 12em; padding-left: 2em; 
+												padding-right: 2em; padding-bottom: 3px;padding-top: 3px; width: 20%;"   on-change="taskEdit(taskresult)">	
+										{{taskresult.timeTaken}}
+										</span>
+									
+										</td>	
+										 
+										<td style = "padding: 3px;margin: 4px;box-sizing: border-box; border-radius: 4px;">
+											<input id ="extraTime" name="extraTime" style = "max-width: 8em; min-width: 2em;" id="{{taskresult}}" name="extraTime" type="number" 
+													 placeholder="extraTime"  ng-model="taskresult.extraTime"  ng-blur ="taskEdit(taskresult)">  
+										</td>	
+									
+										<td>
+											<a role="button" ng-click=" deleteTask(taskresult.id);" style="text-decoration: none; color: red; font-size: 0.9em;" class="yk-icon-link" data-toggle="tooltip" title="Remove">
+												<i class="glyphicon glyphicon-remove"/>
+											</a>
+										</td>
+									</tr>
+									
+									<tr style = "border:2px solid #999; ">
+										<td style="padding: 4px;">
+											<input id="tasktextarea" name= "taskName"  type="text" placeholder="New Task Title" 
+												ng-keyup="handleKeyPress($event);"/>
+										</td>
+											
+										<td style="padding: 4px;">
+											<input name="actualTime" type="number" placeholder="actualTime"  ng-keyup="handleKeyPress($event)"/>  
+										</td>	
+									</tr>	
+							</table>	
+						</li>	
+					</ul>
+				</div>					
 		</result-customizer>
-	</yk-search-query>
-	
+</yk-search-query>
 <yk-model-dialog id="taskDialog" name="TaskModel" title="Tasks" columns="2" actionMethod="saveChanges($event)"/>
-
 </div>

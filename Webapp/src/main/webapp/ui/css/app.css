@@ -347,7 +347,6 @@ body
 	
 }
 
-
 .grabIt
 {
 	cursor: move; 
@@ -360,6 +359,13 @@ body
    float: left;
    padding: 2%;
 }
-        
-        
+/*  aaaaaaaaaaaaaaaaaaa*/
 
+.uncheckedClass {
+    list-style-image: url("/ui/images/toggle-small-expand.png");
+    font-size: large;
+}
+
+.checkedClass {
+     list-style-image: url("/ui/images/toggle-small.png");
+}

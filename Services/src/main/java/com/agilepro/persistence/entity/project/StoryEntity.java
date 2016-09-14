@@ -7,8 +7,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.scheduling.config.Task;
-
 import com.agilepro.commons.StoryStatus;
 import com.agilepro.commons.models.project.StoryModel;
 import com.agilepro.persistence.entity.admin.EmployeeEntity;
@@ -19,7 +17,6 @@ import com.yukthi.utils.annotations.PropertyMapping;
 import com.yukthi.webutils.annotations.ExtendableEntity;
 import com.yukthi.webutils.repository.WebutilsExtendableEntity;
 
-// TODO: Auto-generated Javadoc
 /**
  * Maintains the Stories created by Teams.
  * 
@@ -87,7 +84,7 @@ public class StoryEntity extends WebutilsExtendableEntity
 	/**
 	 *  The project id. 
 	 */
-	@Column(name = "PROJECT_ID")
+	@Column(name = "PROJECT_ID", nullable = false)
 	@ManyToOne
 	@PropertyMapping(type = StoryModel.class, from = "projectId", subproperty = "id")
 	private ProjectEntity projectId;
