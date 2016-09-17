@@ -34,6 +34,15 @@ public interface IStoryController
 	public BasicReadResponse<StoryModel> read(Long id);
 
 	/**
+	 * Fetch all story.
+	 *
+	 * @param projectId
+	 *            the project id
+	 * @return the basic read response
+	 */
+	public BasicReadResponse<List<StoryModel>> fetchAllStory(Long projectId);
+
+	/**
 	 * Update.
 	 *
 	 * @param model
@@ -59,26 +68,20 @@ public interface IStoryController
 	public BaseResponse deleteAll();
 
 	/**
-	 * Fetch all story.
-	 *
-	 * @param storyTitle the story title
-	 * @return the basic read response
-	 */
-	public BasicReadResponse<List<StoryModel>> fetchAllStory(String storyTitle);
-
-	/**
 	 * Fetch story by sprint id.
 	 *
-	 * @param sprintId the sprint id
+	 * @param sprintId
+	 *            the sprint id
 	 * @return the basic read response
 	 */
 	public BasicReadResponse<List<StoryModel>> fetchStoryBySprintId(Long sprintId);
-	
+
 	/**
 	 * Fetchstory by proj id.
 	 *
-	 * @param projectId the project id
+	 * @param projectId
+	 *            the project id
 	 * @return the basic read response
 	 */
-	public BasicReadResponse<List<StoryModel>> fetchstoryByProjId(Long projectId); 
+	public BasicReadResponse<List<StoryModel>> fetchstoryByProjId(Long projectId);
 }

@@ -13,10 +13,13 @@ import com.agilepro.commons.models.customer.ProjectMemberModel;
 import com.agilepro.commons.models.project.StoryAndTaskResult;
 import com.agilepro.commons.models.project.StoryModel;
 import com.agilepro.persistence.entity.admin.DesignationEntity;
+import com.agilepro.persistence.entity.admin.EmployeeEntity;
 import com.agilepro.persistence.entity.admin.ProjectMemberEntity;
 import com.agilepro.persistence.entity.project.StoryEntity;
 import com.agilepro.persistence.entity.project.TaskEntity;
+import com.agilepro.persistence.repository.admin.IEmployeeRepository;
 import com.agilepro.persistence.repository.project.IStoryRepository;
+import com.agilepro.services.admin.EmployeeService;
 import com.yukthi.persistence.ITransaction;
 import com.yukthi.persistence.repository.RepositoryFactory;
 import com.yukthi.utils.exceptions.InvalidStateException;
@@ -39,10 +42,16 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	private RepositoryFactory repositoryFactory;
 
 	/**
+	 * The employee service.
+	 **/
+	@Autowired
+	private EmployeeService employeeService;
+	
+	/**
 	 * The story repo.
 	 **/
 	private IStoryRepository storyRepo;
-
+	
 	/**
 	 * Instantiates a new StoryService.
 	 */
@@ -59,7 +68,6 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	{
 		storyRepo = repositoryFactory.getRepository(IStoryRepository.class);
 	}
-
 	/**
 	 * Save story.
 	 *
@@ -100,7 +108,7 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 
 		try(ITransaction transaction = repository.newOrExistingTransaction())
 		{
-			// updating campaign
+
 			StoryEntity story = super.update(model);
 
 			transaction.commit();
@@ -117,27 +125,49 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	/**
 	 * Fetch all story.
 	 *
-	 * @param storyTitle
-	 *            the story title
+	 * @param projectId the project id
 	 * @return the list
 	 */
-	public List<StoryModel> fetchAllStory(String storyTitle)
+	public List<StoryModel> fetchAllStory(Long projectId)
 	{
-		List<StoryModel> storymodel = null;
-		storyRepo = repositoryFactory.getRepository(IStoryRepository.class);
-		List<StoryEntity> storyEntity = storyRepo.fetchAllStory(storyTitle);
-		if(storyEntity != null)
+		List<StoryModel> storymodels = null;
+		
+		List<StoryEntity> storyEntity = storyRepo.fetchstoryByProjId(projectId);
+		
+		StoryModel storyModel = null;
+		EmployeeModel employeeModel = null;
+		
+		
+		if(storyEntity.size() > 0)
 		{
-			storymodel = new ArrayList<StoryModel>(storyEntity.size());
+			storymodels = new ArrayList<StoryModel>(storyEntity.size());
+			
 			for(StoryEntity entity : storyEntity)
 			{
-				storymodel.add(super.toModel(entity, StoryModel.class));
+				storyModel = super.toModel(entity, StoryModel.class);
+				
+			//	storyModel.setPhoto(getEmployee(storyModel.getOwnerId()).getPhoto());
+				if(storyModel.getOwnerId() != null)
+				{
+					employeeModel = employeeService.fetchEmployee(storyModel.getOwnerId());
+					
+					storyModel.setPhoto(employeeModel.getPhoto());
+				}
+				
+				storymodels.add(storyModel);
 			}
 		}
 
-		return storymodel;
+		return storymodels;
 	}
-
+	
+	private EmployeeModel getEmployee(Long employeeId)
+	{
+		EmployeeModel employeeModel = employeeService.fetchEmployee(employeeId);
+		
+		return employeeModel;
+	}
+	
 	/**
 	 * Fetch story by sprint id.
 	 *
@@ -147,24 +177,38 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	 */
 	public List<StoryModel> fetchStoryBySprintId(Long sprintId)
 	{
-		List<StoryModel> storymodel = null;
-		storyRepo = repositoryFactory.getRepository(IStoryRepository.class);
+		List<StoryModel> storymodels = null;
 
-		List<StoryEntity> storyEntity = storyRepo.fetchStoryBySprintId(sprintId);
-		if(storyEntity != null)
+		List<StoryEntity> storyEntities = storyRepo.fetchStoryBySprintId(sprintId);
+		
+		StoryModel storyModel = null;
+		EmployeeModel employeeModel = null;
+		
+		if(storyEntities.size() > 0)
 		{
-			storymodel = new ArrayList<StoryModel>(storyEntity.size());
-			for(StoryEntity entity : storyEntity)
+			storymodels = new ArrayList<StoryModel>(storyEntities.size());
+			
+			for(StoryEntity entity : storyEntities)
 			{
-				storymodel.add(super.toModel(entity, StoryModel.class));
+				storyModel = super.toModel(entity, StoryModel.class);
+				
+				if(storyModel.getOwnerId() != null)
+				{
+					employeeModel = employeeService.fetchEmployee(storyModel.getOwnerId());
+					
+					storyModel.setPhoto(employeeModel.getPhoto());
+				}
+				
+				storymodels.add(storyModel);
 			}
 		}
 
-		return storymodel;
+		return storymodels;
 	}
 
 	/**
 	 * fetch a stories by project id.
+	 * 
 	 *
 	 * @param projectId
 	 *            the project id
@@ -209,19 +253,19 @@ public class StoryService extends BaseCrudService<StoryEntity, IStoryRepository>
 	{
 		try(ITransaction transaction = repository.newOrExistingTransaction())
 		{
-
-			StoryEntity backlogEntity = super.repository.findById(parentStoryId);
-
-			if(backlogEntity == null)
+			// check for child if den delete it first 
+			List<StoryEntity> childStories = storyRepo.fetchstoryByParentId(parentStoryId);
+			
+			if(childStories.size() > 0)
 			{
-				throw new InvalidRequestParameterException("Invalid parentStoryId id specified - " + parentStoryId);
+				for(StoryEntity entity : childStories)
+				{
+					super.deleteById(entity.getId());
+				}
 			}
-
-			Long parentId = backlogEntity.getParentStoryId();
-
-			// delete backlogEntity
-			super.deleteById(backlogEntity.getId());
-
+			
+			super.deleteById(parentStoryId);
+			
 			transaction.commit();
 		} catch(Exception ex)
 		{

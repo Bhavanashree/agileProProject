@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import com.yukthi.validation.annotations.MaxLen;
 import com.yukthi.validation.annotations.MinLen;
+import com.yukthi.validation.annotations.Required;
 import com.yukthi.webutils.common.AbstractExtendableModel;
 import com.yukthi.webutils.common.annotations.ExtendableModel;
 import com.yukthi.webutils.common.annotations.IgnoreField;
@@ -35,6 +36,7 @@ public class SprintModel extends AbstractExtendableModel
 	 **/
 	@MinLen(3)
 	@MaxLen(50)
+	@Required
 	private String name;
 
 	/**
@@ -47,11 +49,13 @@ public class SprintModel extends AbstractExtendableModel
 	/**
 	 * The start date of sprint.
 	 */
+	@Required
 	private Date startDate;
 
 	/**
 	 * The end date of sprint.
 	 */
+	@Required
 	private Date endDate;
 
 	/**
@@ -64,6 +68,7 @@ public class SprintModel extends AbstractExtendableModel
 	/**
 	 * projectd.
 	 */
+	@NonDisplayable
 	private Long projectId;
 
 	/**

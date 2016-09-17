@@ -120,8 +120,9 @@ $.application.controller('commonController', ["$scope", "clientContext", "utils"
     		
     		$scope.selectedProject = {"id" : presentProjectId};
     		
-    		// broad cast for project member 
+    		// broad cast for (project member) , (sprint display stories according to project)
     		$scope.$broadcast("activeProjectSelectionChanged");
+    		
     	}
     	
     	actionHelper.invokeAction("project.readAll", null, null, readProCallBack);

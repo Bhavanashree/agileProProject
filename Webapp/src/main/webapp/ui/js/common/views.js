@@ -69,8 +69,8 @@ $.application.config(function($stateProvider, $urlRouterProvider)
 	
 	//backlog
 	addState("sprint","story/sprints-menu.html", "story/sprint.html", "sprintTab");
-	addState("story","story/sprints-menu.html", "story/story.html", "sprintTab");
+	addState("story","story/story-menu.html", "story/story.html", "sprintTab");
 	addState("priority","story/sprints-menu.html", "story/priority.html", "sprintTab");
-	addState("task","story/sprints-menu.html", "story/task.html", "sprintTab");
+	addState("task","story/story-menu.html", "story/task.html", "sprintTab");
 	
 });

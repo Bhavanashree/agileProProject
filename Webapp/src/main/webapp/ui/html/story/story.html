@@ -1,5 +1,5 @@
-<div class="container-fluid" ng-controller="storyController" ng-init="storyById()" style="padding: 0px;">
-	<yk-search-query id="storySearch" title="Backlog" name="storySearch">
+<div class="container-fluid" ng-controller="storyController" style="padding: 0px;">
+	<yk-search-query id="storySearch" title="Story" name="storySearch">
 		<action id="addBacklog" label="Add backlog " color="blue" icon="glyphicon-plus" method="addEntry($event)"/>
 		<action id="editBacklog" label="Edit backlog " color="blue" icon="glyphicon-edit" method="editEntry($event)" row-action="true"/>
 		<action id="deleteBacklogStory" label="Delete backlog " color="red" icon="glyphicon-remove" method="deleteEntry($event)" row-action="true"/>
@@ -8,7 +8,7 @@
 				<table style="width: 100%; padding: 0px;  border-collapse: collapse; ">
 					<tr>
 						<td style="font-weight: bold; font-size: 0.7em; vertical-align: top; padding:0.5em; table-border:0.3em; text-transform: uppercase;">
-							<div class="text1" style=" margin-left: {{result.indent * 10}}px">{{result.title}} - - - - {{result.parentStoryId}}</div>
+							<div class="text1" style=" margin-left: {{result.indent * 10}}px">{{result.title}}</div>
 						</td>
 						
 						<td>

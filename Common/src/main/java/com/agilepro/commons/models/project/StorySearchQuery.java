@@ -3,6 +3,7 @@ package com.agilepro.commons.models.project;
 import com.agilepro.commons.StoryStatus;
 import com.yukthi.persistence.repository.annotations.Condition;
 import com.yukthi.persistence.repository.annotations.Operator;
+import com.yukthi.validation.annotations.Required;
 import com.yukthi.webutils.common.annotations.IgnoreField;
 import com.yukthi.webutils.common.annotations.LOV;
 import com.yukthi.webutils.common.annotations.Model;
@@ -33,11 +34,15 @@ public class StorySearchQuery
 	 *  The project id. 
 	 **/
 	@NonDisplayable
-	@Condition(value = "projectId.id", op = Operator.EQ)
+	@Condition(value = "projectEntity.id", op = Operator.EQ)
 	private Long projectId;
 	
+	/** 
+	 * The owner id. 
+	 * */
 	@Condition(value = "ownerId.name", op = Operator.EQ)
 	private Long ownerId;
+	
 	/**
 	 * Instantiates a new backlog search query.
 	 */

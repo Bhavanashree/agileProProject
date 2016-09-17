@@ -23,9 +23,10 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			 var key = e.keyCode ? e.keyCode : e.which;
 				  
 			 //enter key   
-				   if (key == 13) {   
-				         $scope.saveBacklog();
-				      }
+			   if (key == 13) 
+			   {   
+			      $scope.saveBacklog();
+			   }
 		}
 
 		 $scope.handleKeyForSubtitle = function(e) {
@@ -36,7 +37,8 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			 e = e || window.event;
 			 var key = e.keyCode ? e.keyCode : e.which;
 			   //enter key   
-			   if (key == 13) {  
+			   if (key == 13) 
+			   {  
 				   $scope.saveSubstory(element.val());
 			   } 
 		}
@@ -53,11 +55,20 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			
 			console.log("inlinetext:     " + $scope.inlineTitle );
 			
+			projectId = $scope.getActiveProject();
+			
+			if(!projectId)
+			{
+				utils.alert("Please Select Project");
+				return;
+			}
+			
 			$scope.model = {"title" : $scope.inlineTitle.trim(),"projectId" : projectId	};
 			
 		    console.log("model is invoked===model====" + projectId); 
 
 		    console.log("model is invoked===model====" + $scope.model); 
+		    
 			$scope.initErrors("model", true);
 			$scope.newModelMode= 'Save';
 			$scope.saveChanges();
@@ -68,6 +79,7 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 
 		//autorefresh
 		$scope.refreshSearch = function(){
+			
 			$scope.$broadcast("invokeSearch", {});
 		};
 		
@@ -93,26 +105,21 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 			var updatefetchStoriesByProjectId = function(readResponse, respConfig){
 				console.log("updateStoryByProjectId");
 				var model = readResponse.model;
-				
-				console.log("$scope.searchResults = " + model.title);
-				
+			
 				try
 				{
 		    		$scope.$apply();
 				}catch(ex)
 				{}				
 			}
+			
 			//
 			$scope.fetchStoriesByProjectId = function(){
 				
 				projectId = $scope.getActiveProject();
 
 				console.log("PROJECT ID = " + projectId);
-				if(!projectId) return;
-				
-				console.log("storyById");
-
-			//	actionHelper.invokeAction("story.readAll", null, null, updatefetchStoriesByProjectId);
+			
 				actionHelper.invokeAction("story.storyProjectId", null, {"projectId" : projectId}, updatefetchStoriesByProjectId);				
 			};
 			
@@ -121,6 +128,8 @@ $.application.controller('storyController', ["$scope", "crudController", "utils"
 				projectId = $scope.getActiveProject();
 				
 				$scope.fetchStoriesByProjectId();
+				
+				$scope.refreshSearch();
 			   
 			});
 }]);

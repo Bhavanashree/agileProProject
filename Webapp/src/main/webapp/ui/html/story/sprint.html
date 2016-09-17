@@ -1,64 +1,86 @@
-<div class="container-fluid" ng-controller="sprintController"  ng-init="sprintById()"  style="padding: 0px; ">
+<div class="container-fluid" ng-controller="sprintController"  style="padding: 0px; ">
 	<result-customizer>
 			<!-- sprint drop down -->
 		<div class="storyBoards">
-			<div class="row" style="padding: 0px; width : 20%;" ng-init="listOfSprint($event)">
-				<table>
-					<tr>
-						<label for="repeatSelect"> Sprints  </label>
-						<select name="repeatSelect" id="repeatSelect" ng-model="selectedSprintObj" ng-change="displaySprint()">
-							<option ng-repeat="obj in sprint" value="{{obj}}">{{obj.name}}</option>
-						</select>
-					</tr>				
-					<tr style="padding: 0.1em 0.5em; text-align: right;">
-						<a role="button" ng-click="addEntry($event)" style="text-decoration: none; color: blue; font-size: 1em;" class="yk-icon-link" data-toggle="tooltip" title="Add Sprint">
-							<i class="glyphicon glyphicon-plus"/>
-						</a>
-						<a role="button" ng-click="editSprint(selectedSprintObj)" style="text-decoration: none; color: blue; font-size: 1em;" class="yk-icon-link" data-toggle="tooltip" title="Edit Sprint">
-							<i class="glyphicon glyphicon-edit"/>
-						</a>
-					</tr>
-				</table>
+			<div class="row" style="padding: 0px; width : 20%; margin-bottom: 2em;" ng-init="listOfSprint($event)">
+				<div class="col-md-12 col-xs-12">
+					<table width="100%">
+						<tr>
+							<td>
+								<label for="repeatSelect" style="color: graytext; margin:5px;"><b>Sprints</b>   </label>
+							</td>
+							<td>
+								<select name="repeatSelect"  id="repeatSelect"  ng-model="selectedSprintObj" 
+											ng-options="sprintObj as sprintObj.name for sprintObj in sprint track by sprintObj.id" 
+									ng-change="displaySprint(selectedSprintObj)">
+									<option value=""> -- Select Sprint -- </option>
+								</select>
+							</td>
+							<td>
+								<a role="button" ng-click="addEntry($event)" style="text-decoration: none; color: blue; font-size: 1em;" class="yk-icon-link" data-toggle="tooltip" title="Add Sprint">
+									<i class="glyphicon glyphicon-plus"/>
+								</a>
+								</td>
+								<td>
+								<a role="button" ng-click="editSprint(selectedSprintObj)" style="text-decoration: none; color: blue; font-size: 1em;" class="yk-icon-link" data-toggle="tooltip" title="Edit Sprint">
+									<i class="glyphicon glyphicon-edit"/>
+								</a>
+							</td>
+						</tr>		
+					</table>
+				</div>
 			</div>
+			
+			
+		<div ng-show="false">
+			There is no sprint created
+		</div>
 			 <!-- backlog drag -->
-			<div align="center" class = "col"  style = "background-color : #bbc7c7;  height : auto; padding: 10px;" ng-init="listOfStories($event)">  
-				<div class="panel-heading"  style = "background-color : papayawhip; font-size: 0.9em; ">BACKLOG</div>
-					<div id={{backlog}} draggable="true" yk-on-drag ="dragToProgress(event)" ng-repeat="backlog in story  | filter: orderBy:'title'" 
-						style = "background-color : #ded6d6; margin:10px; border-radius: 25px; width :150px; height : 150px; border: 1px solid grey; padding: 25px; cursor:-moz-grabbing; " >
-							<div style =" text-align:left;font-size: 0.5em;  text-transform: uppercase;">{{backlog.title}}</br>( {{backlog.estimate}} )</div>						
+		<div style="background-color: #ece4e4; border: 6px solid black; height: 41em; overflow:scroll;" ng-show="true">
+			<div align="center" class = "col"  style = "background-color : #bbc7c7;  margin-top: 2px; height : 40em;  padding: 5px;">  
+				<h4 style = "text-align : center; " >Backlog</h4>
+					<div id={{backlog}} draggable="true" yk-on-drag ="onDragStories(event)" ng-repeat="backlog in story  | filter: orderBy:'title'" 
+						style = "background-color : #e3f6f9; margin:10px; width :150px; height : 100px; border: 3px solid ghostwhite;  cursor:-moz-grabbing; " >
+							<div style =" text-align:left;font-size: 0.5em; padding:2px;  text-transform: uppercase;"><b>{{backlog.title}}</b></div>						
+					 <img src="{{backlog.photoUrl}}" style ="height: 50px; float: right;"  draggable="false" width="50" height="65"/>
 					</div>
 			</div>
 				
 			<!-- drop to notStarted -->
 			<div id ="Notstarted"   class = "col-md-3" style = "background-color : #acccdc; height : 50em; padding: 25px; margin: 5px;" 
-						yk-on-drag-over ="allowDropOnNotStarted(event)"  yk-on-drop="onDropofNotStarted(event)">
-				<div class="panel-heading" style = "background-color : #bdc3c7; ">	notStarted</div>
-					<div  id = {{objNotstarted}}  draggable="true" ng-repeat="objNotstarted in notStarted | filter: orderBy:'title'" " style = "background-color : lightpink; margin:10px; 
-						border-radius: 25px; width :150px; height : 150px; border: 1px solid grey; padding: 25px; cursor:-moz-grabbing; " yk-on-drag ="dragToCompleted(event)">
-								{{objNotstarted.title}} {{objNotstarted.status}}
-					</div>
+						yk-on-drag-over ="allowDropOnNotStarted(event)"  yk-on-drop="onDropofNotStarted(event)">	
+				<div  id = {{objNotstarted}}  draggable="true" ng-repeat="objNotstarted in notStarted | filter: orderBy:'title'" style = "background-color : #e3f6f9; 
+						margin:10px; width :150px; height : 100px; border: 3px solid ghostwhite;  cursor:-moz-grabbing;" yk-on-drag ="dragToCompleted(event)">
+					<div style =" text-align:left;font-size: 0.5em; padding:2px;  text-transform: uppercase;">{{objNotstarted.title}} {{objNotstarted.status}}</div>
+				 <img src="{{objNotstarted.photoUrl}}"  style ="height: 50px; float: right;"  draggable="false"  width="50" height="50"/>		
+				</div>
 			</div>
 					
 			<!-- drop to inProgress -->	
 			<div id = "inProgress" class = "col-md-3"  style = "background-color : #afcdd0; height :50em; padding: 25px;  margin: 5px;"  
 					yk-on-drag-over ="allowDropOnProgress(event)"  yk-on-drop="onDropofInProgress(event)"> 
-				<div class="panel-heading" style = "background-color : #bdc3c7;">	IN_PROGRESS</div>
-					<div id = {{obj}}  draggable="true" ng-repeat="obj in inProgress  | filter: orderBy:'title'" " style = "background-color : #ded6d6; margin:10px; 
-						border-radius: 25px; width :150px; height : 150px; border: 1px solid grey; padding: 25px; cursor:-moz-grabbing; " 	
-								yk-on-drag ="dragToNotStarted(event)">{{obj.title}} {{obj.status}}			
+			
+					<div id = {{obj}}  draggable="true" ng-repeat="obj in inProgress  | filter: orderBy:'title'" style = "background-color : #e3f6f9; 
+						margin:10px; width :150px; height : 100px; border: 3px solid ghostwhite;  cursor:-moz-grabbing;" yk-on-drag ="dragToNotStarted(event)">
+						<div style =" text-align:left;font-size: 0.5em; padding:2px;  text-transform: uppercase;">{{obj.title}} {{obj.status}} {{obj.photoUrl}}	</div>
+				
+					 <img src="{{obj.photo}}" style ="height: 50px; float: right;"  draggable="false" width="50" height="65"/>
 					</div>
+					
 			</div>
 						
 			<!-- drop to completed -->
 			<div id = "completed"  class = "col-md-3" style = "background-color : #8eafc1; height : 50em; padding: 25px; margin: 5px;"	
-					yk-on-drag-over ="allowDropOnCompleted(event)"  yk-on-drop="onDropofCompleted(event)" >  
-				<div class="panel-heading" style = "background-color : #bdc3c7;">COMPLETED</div>
-					<div  id = {{objCompleted}}  draggable="true" ng-repeat=" objCompleted in completed" style = "background-color : #ded6d6; margin:10px; 
-						border-radius: 25px; width :150px; height : 150px; border: 1px solid grey; padding: 25px; cursor:-moz-grabbing; " yk-on-drag ="dragToProgress(event)" >
-								{{objCompleted.title}}  {{objCompleted.status}}
+					yk-on-drag-over ="allowDropOnCompleted(event)"  yk-on-drop="onDropofCompleted(event)"> 
+					<div  id = {{objCompleted}}  draggable="true" ng-repeat=" objCompleted in completed" style ="background-color : #e3f6f9; 
+							margin:10px; width :150px; height : 100px; border: 3px solid ghostwhite;  cursor:-moz-grabbing;" yk-on-drag ="dragToProgress(event)" >
+							<div style =" text-align:left;font-size: 0.5em; padding:2px;  text-transform: uppercase;">{{objCompleted.title}}  {{objCompleted.status}} </div> 
+						<img src="{{objCompleted.photoUrl}}" style ="height: 50px; float: right;"  draggable="false" width="50" height="65"/>
 					</div>
+					
 			</div>
 		</div>
 	</result-customizer>
+	
 	<yk-model-dialog id="sprintDialog" name="SprintModel" title="Sprint" columns="2" actionMethod="saveSprint($event)"/>
 </div>

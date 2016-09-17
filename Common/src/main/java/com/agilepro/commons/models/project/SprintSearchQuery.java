@@ -12,7 +12,6 @@ import com.yukthi.webutils.common.annotations.Model;
 @Model
 public class SprintSearchQuery
 {
-
 	/**
 	 * The name.
 	 **/
@@ -28,22 +27,26 @@ public class SprintSearchQuery
 	/**
 	 * The start date.
 	 **/
-	@Condition(value = "startDate", op = Operator.EQ, ignoreCase = true)
+	@Condition(value = "startDate", op = Operator.GE)
 	private Date startDate;
 
 	/**
 	 * The end date.
 	 **/
-	@Condition(value = "endDate", op = Operator.EQ, ignoreCase = true)
+	@Condition(value = "endDate", op = Operator.LE)
 	private Date endDate;
-	
+
 	/**
 	 * Instantiates a new sprint search query.
 	 *
-	 * @param name the name
-	 * @param description the description
-	 * @param endDate the end date
-	 * @param startDate the start date
+	 * @param name
+	 *            the name
+	 * @param description
+	 *            the description
+	 * @param endDate
+	 *            the end date
+	 * @param startDate
+	 *            the start date
 	 */
 	public SprintSearchQuery(String name, String description, Date endDate, Date startDate)
 	{

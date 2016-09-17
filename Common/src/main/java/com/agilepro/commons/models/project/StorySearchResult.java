@@ -33,8 +33,8 @@ public class StorySearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Estimation.
 	 */
-	@Field(value = "estimate")
-	private Integer estimate;
+	@Field(value = "storyPoints")
+	private Integer storyPoints;
 
 	/**
 	 * The parent story id.
@@ -61,9 +61,11 @@ public class StorySearchResult extends AbstractExtendedSearchResult
 	private int indent = 0;
 
 	/**
-	 *  The project id.
+	 * The project id.
 	 **/
+	@Field(value = "projectEntity.id")
 	private Long projectId;
+	
 	/**
 	 * The status.
 	 */
@@ -155,24 +157,23 @@ public class StorySearchResult extends AbstractExtendedSearchResult
 	}
 
 	/**
-	 * Gets the estimate.
+	 * Gets the story points.
 	 *
-	 * @return the estimate
+	 * @return the story points
 	 */
-	public Integer getEstimate()
+	public Integer getStoryPoints()
 	{
-		return estimate;
+		return storyPoints;
 	}
 
 	/**
-	 * Sets the estimate.
+	 * Sets the story points.
 	 *
-	 * @param estimate
-	 *            the new estimate
+	 * @param storyPoints the new story points
 	 */
-	public void setEstimate(Integer estimate)
+	public void setStoryPoints(Integer storyPoints)
 	{
-		this.estimate = estimate;
+		this.storyPoints = storyPoints;
 	}
 
 	/**
@@ -272,7 +273,8 @@ public class StorySearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Sets the project id.
 	 *
-	 * @param projectId the new project id
+	 * @param projectId
+	 *            the new project id
 	 */
 	public void setProjectId(Long projectId)
 	{

@@ -26,86 +26,83 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 	 
 	 var projectId;
 	 
+	 
 		$scope.newSprintMode = true;	
 		$scope.sprintmodel;
 		
 		$scope.saveSprint = function(e) {
-			console.log("model is invoked " + $scope.model);
 			
 			$scope.model.projectId = projectId;
+			
 			$scope.saveChanges(e);
 		};
 
 		var readSprintCallBack = function(read, response){
 			$scope.sprint = read.model;
-			console.log(read.model);
-			
-			console.log($scope.sprint);
 			
 			var index;
+			
 			var sprintId;
 			
 				for(index in $scope.sprint)
 				{
-						sprintName = $scope.sprint[index].name;
-						sprintId = $scope.sprint[index].id;
-			
-						console.log(" sprint id2---  >", $scope.sprint[index].projectId);
+					sprintName = $scope.sprint[index].name;
+					sprintId = $scope.sprint[index].id;
 				}
+				
 				$scope.$apply();
-			
 		};
 		
 		
-		$scope.listOfSprint= function(sprintName){			 	
+		$scope.listOfSprint= function(sprintName){	
 			console.log("listofsprint");
 			actionHelper.invokeAction("sprint.readAll", null, null, readSprintCallBack);
 		 };
 			 	
 		 //List of stories
 		var readStoryCallBack = function(read, response){
-			$scope.story = read.model;	
-			console.log(read.model.project);		
-			console.log("invoked readStoryCallBackprjtid " , projectId);
-			console.log($scope.story);					
 			
-			var index;				
+			$scope.story = read.model;		
+			
+			var index;
+			
+			var fileId;
 				
 			for(index in $scope.story)
 			{
-				$scope.story[index].dragValue = false;
+				if($scope.story[index].photo)
+				{
+					fileId =  $scope.story[index].photo.fileId;
+					
+					$scope.story[index].photoUrl = actionHelper.actionUrl("files.fetch", {"id": fileId});
+		
+				//	$scope.story[index].dragValue = false;
+				}
 			}
-									
+			
 			$scope.$apply();					
 		};
 			
 		
-		$scope.listOfStories =function(storyTitle){
-			 console.log("liststories");
-			 actionHelper.invokeAction("story.readAll",null,null,readStoryCallBack);
-					 
-		};
+		$scope.listOfStories =function(){
 			
+			 projectId = $scope.getActiveProject();
+			 actionHelper.invokeAction("story.readAll",null,{"projectId" : projectId},readStoryCallBack);
+		};
+		
 		// editSprint 
 		$scope.editSprint = function(obj){		
-			obj  = JSON.parse($scope.selectedSprintObj);
+			//obj  = JSON.parse($scope.selectedSprintObj);
+			obj = $scope.selectedSprintObj;
 			console.log(obj.id);
 			$scope.selectedId = obj.id;
 			$scope.editEntry(obj);
-			$scope.refreshSearch();
 		};
 					
-					
-			//drag and drop	1
+		//drag and drop	1
 		$scope.onSelectStories = function(backlog) {
-				
-			console.log("id------- is =========" + backlog.id);
-			
-			console.log("invoked onSelectStories prjtid " , projectId);
 			backlog.dragValue = true;
-				
 			selectedStory.push(backlog);
-
 		};
 		
 		var saveCallBack = function(read, response){
@@ -113,10 +110,9 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 		 };
 		
 		 //saving sprint with  stories
-		$scope.onSprintDrop = function(event){
-					
+		$scope.onSprintDrop = function(event){	
 			event.preventDefault();
-			console.log("invoked onDropBacklog" , model);
+			console.log("invoked __________+++++++++onDropBacklog" , selectedStory[index].photo);
 
 			for(index in selectedStory)
 			{
@@ -131,12 +127,13 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 						"status" : "IN_PROGRESS",
 						"priority" :selectedStory[index].priority,
 						"sprint" : selectedSprintObj.id,
-						"projectId" :selectedStory[index].projectId
+						"projectId" :selectedStory[index].projectId,
+						"photo" : selectedStory[index].photo
 				};
 
 				console.log("invokedonSprintDrop prjtid " , projectId);
 				// action helper update for stories
-				actionHelper.invokeAction("story.update", model, {projectId : projectId}, saveCallBack);
+				actionHelper.invokeAction("story.update", model, null, saveCallBack);
 			}
 			// loop for update in ui
 			for(index in selectedStory)
@@ -154,19 +151,17 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 				
 		var displaySprintCallBack  = function(read, response)
 		{
-			console.log(" displaysprintBack" ,  read.model);
 			
 			var backLogModels  = read.model;
-			
 			var backLogModel;
-			
+			var index;
 			var i = -1;
 			
 			for(index in backLogModels)
 			{
-				backLogModel = backLogModels[index];
-				console.log("nnnnnnnnnnnnnnnnnnnnnnnn" , backLogModel);
 				
+				backLogModel = backLogModels[index];
+			//	$scope.inProgress =  backLogModels[index].photo.photoUrl;
 				
 				switch(backLogModel.status)
 				{
@@ -180,7 +175,7 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 						$scope.completed.push(backLogModel);
 						
 				}
-			
+				
 				for(i = 0 ; i < $scope.story.length ; i++)
 				{
 					if($scope.story[i].id == backLogModel.id)
@@ -198,19 +193,31 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 		};
 		
 
-		$scope.displaySprint = function(){
+		$scope.displaySprint = function(selectedObject){
+			
+			console.log(selectedObject);
+			
+			if(!selectedObject)
+			{
+				return;
+			}
+			
+			$scope.selectedSprintObj = selectedObject;
+			
+			$scope.inProgress = [];
+			 
+			$scope.notStarted = [];
+			 
+			$scope.completed = [];
 				
-				$scope.inProgress = [];
-				 
-				$scope.notStarted = [];
-				 
-				$scope.completed = [];
+			selectedSprintObj = $scope.selectedSprintObj; 
 			
-			selectedSprintObj = JSON.parse($scope.selectedSprintObj); 
 			
-			 console.log("list2sprints" ,  selectedSprintObj);
+			console.log(selectedSprintObj);
+			
+			 console.log("list2sprints" ,  $scope.selectedSprintObj);
 			 // invoke backlog 
-			 actionHelper.invokeAction("story.readSprints",null,{"sprintId" : selectedSprintObj.id,"projectId ": projectId},displaySprintCallBack);
+			actionHelper.invokeAction("story.readStoriesBySprint",null,{"sprintId" : selectedSprintObj.id},displaySprintCallBack);
 					 
 		};
 		
@@ -219,10 +226,50 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 			$scope.displaySprint();
 		};	
 		
-		//drop to in progress
+		// on drag method for stories
+		$scope.onDragStories = function(event){
+			event.originalEvent.dataTransfer.setData('text/plain', 'text');
+			if(!$scope.selectedSprintObj)
+			{
+				utils.alert("Please select sprint");
+			}
+			$scope.selectedStoryForDrag = JSON.parse(event.target.id);
+			console.log($scope.selectedStoryForDrag);
+			
+			
+			
+		};
+		//comman method for save status and sprintId to stories
+		
+		sprintUpdateAfterDrop = function(status)
+		{
+			$scope.selectedStoryForDrag.status = status;
+			
+			$scope.selectedStoryForDrag.sprint = $scope.selectedSprintObj.id;
+			
+			actionHelper.invokeAction("story.update", $scope.selectedStoryForDrag, null, updateEditCallBack);	
+		}
+		
+		//functions of Drag to Not started
+		$scope.allowDropOnNotStarted = function(event){
+			console.log("area for allowDropOnNotStarted");
+			event.preventDefault();
+		};
+		
+		$scope.onDropofNotStarted = function(event){
+			
+			console.log("invoked onDropofNotStarted ", $scope.selectedSprintObj);
+			event.preventDefault();
+			
+			sprintUpdateAfterDrop("NOT_STARTED");	
+			
+			$scope.$apply();
+			
+		};	
+		
+
+		//functions of Drag to IN progress
 		$scope.dragToProgress = function(event){
-	
-			console.log("drag to progress");
 			event.originalEvent.dataTransfer.setData('text/plain', 'text');
 			
 			console.log( "id", event.target.id);
@@ -232,72 +279,15 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 		//dropping 2	
 		$scope.allowDropOnProgress = function(event){
 			console.log("area for allowDropOnProgress");
-			 event.preventDefault();
+			event.preventDefault();
 		};
 		
 		$scope.onDropofInProgress = function(event){
-	
 			event.preventDefault();
 			
-				var model = {
-						
-						"id" : draggingBacklogObj.id,
-						"title" : draggingBacklogObj.title,
-						"version" : draggingBacklogObj.version,
-						"description" : draggingBacklogObj.description,
-						"estimate" : draggingBacklogObj.estimate,
-						"parentStoryId" :  draggingBacklogObj.parentStoryId, 
-						"ownerId" :  draggingBacklogObj.ownerId,	
-						"status" :  "IN_PROGRESS", 
-						"sprint": selectedSprintObj.id ,
-						"projectId" : projectId
-				};
-				
-				// action helper update for stories
-				actionHelper.invokeAction("story.update", model, {"project" : projectId}, updateEditCallBack);
+			sprintUpdateAfterDrop("IN_PROGRESS");	
 				
 			$scope.$apply();
-			console.log(" test1", model );
-			
-		};
-		
-		//drop to in NotStarted
-		$scope.dragToNotStarted= function(event){
-	
-			console.log("drag to NotStarted");
-			event.originalEvent.dataTransfer.setData('text/plain', 'text');
-			console.log(" id", event.target.id);
-			draggingBacklogObj = JSON.parse(event.target.id);
-		};
-		
-		$scope.allowDropOnNotStarted = function(event){
-			console.log("area for allowDropOnNotStarted");
-			event.preventDefault();
-		};
-		
-		$scope.onDropofNotStarted = function(event){
-			console.log("invoked onDropofNotStarted ");
-			event.preventDefault();
-			
-				var model = {
-						
-						"id" : draggingBacklogObj.id,
-						"title" : draggingBacklogObj.title,
-						"version" : draggingBacklogObj.version,
-						"description" : draggingBacklogObj.description,
-						"estimate" : draggingBacklogObj.estimate,
-						"parentStoryId" :  draggingBacklogObj.parentStoryId, 
-						"ownerId" :  draggingBacklogObj.ownerId,	
-						"status" :  "NOT_STARTED", 
-						"sprint": selectedSprintObj.id,
-						"projectId" : projectId
-				};
-			
-				// action helper update for stories
-				actionHelper.invokeAction("story.update", model, null, updateEditCallBack);	
-			
-				$scope.$apply();
-				console.log(" test1", model );
 			
 		};
 	
@@ -320,24 +310,8 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 		$scope.onDropofCompleted = function(event){
 			console.log("invoked onDropofCompleted ");
 			event.preventDefault();
-			
-				var model = {
-						
-						"id" : draggingBacklogObj.id,
-						"title" : draggingBacklogObj.title,
-						"version" : draggingBacklogObj.version,
-						"description" : draggingBacklogObj.description,
-						"estimate" : draggingBacklogObj.estimate,
-						"parentStoryId" :  draggingBacklogObj.parentStoryId, 
-						"ownerId" :  draggingBacklogObj.ownerId,	
-						"status" :  "COMPLETED", 
-						"sprint": selectedSprintObj.id,
-						"projectId" : projectId
-				};
-				console.log("invoked onDropofCompleted ", draggingBacklogObj);
-				// action helper update for stories
-				actionHelper.invokeAction("story.update", model, null, updateEditCallBack);
-			
+			sprintUpdateAfterDrop("COMPLETED");	
+	
 			$scope.$apply();		
 		};	
 		
@@ -345,31 +319,16 @@ $.application.controller('sprintController', ["$scope", "crudController", "utils
 			$scope.common_hideLeftMenu();
 		};
 		
-		
-		var updateSprintByProjectId = function(read, response){
-			console.log("updateSprintByProjectId");
-			
-			console.log("model1--", read.model);
-			var model = read.model;	
-			try
-			{
-	    		$scope.$apply();
-			}catch(ex)
-			{}
-		}
-		$scope.sprintById = function(){
-			projectId = $scope.getActiveProject();
-			console.log("PROJECT ID = " + projectId);
-			console.log("sprintById");
-			//actionHelper.invokeAction("sprint.sprintProjectId", null, {"projectId" : projectId}, updateSprintByProjectId);	
-		};
-		
 		// Listener for broadcast
-		$scope.$on("activeProjectSelectionChanged", function(event, args) {
-			$scope.sprintById();
-			console.log("PROJECT+++++++++++++++++++++ ID = " + 	$scope.getActiveProject());
-		//	$scope.getActiveProject();
-		   
+		$scope.$on("activeProjectSelectionChanged", function(event, args) {	
+			
+			console.log("braod cast is working");
+			$scope.listOfStories(); 
 		});
 		
+		// sprint active
+		
+		 $scope.getActiveSprint = function(){
+			 console.log(); 
+		  };		  
 }]);		

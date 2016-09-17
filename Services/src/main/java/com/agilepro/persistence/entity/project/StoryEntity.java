@@ -41,8 +41,8 @@ public class StoryEntity extends WebutilsExtendableEntity
 	/**
 	 * The estimation of time.
 	 **/
-	@Column(name = "ESTIMATE")
-	private Integer estimate;
+	@Column(name = "STORY_POINTS")
+	private Integer storyPoints;
 
 	/**
 	 * The parent story id.
@@ -82,15 +82,15 @@ public class StoryEntity extends WebutilsExtendableEntity
 	private SprintEntity sprint;
 
 	/**
-	 *  The project id. 
+	 * The project id.
 	 */
 	@Column(name = "PROJECT_ID", nullable = false)
 	@ManyToOne
 	@PropertyMapping(type = StoryModel.class, from = "projectId", subproperty = "id")
-	private ProjectEntity projectId;
-	
+	private ProjectEntity projectEntity;
+
 	/**
-	 * The list of stories under this sprint. 
+	 * The list of stories under this sprint.
 	 **/
 	@OneToMany(mappedBy = "story")
 	private List<TaskEntity> tasks;
@@ -104,20 +104,16 @@ public class StoryEntity extends WebutilsExtendableEntity
 	/**
 	 * Instantiates a new back log entity.
 	 *
-	 * @param title
-	 *            the title
-	 * @param estimate
-	 *            the estimate
-	 * @param description
-	 *            the description
-	 * @param status
-	 *            the status
+	 * @param title            the title
+	 * @param storyPoints the story points
+	 * @param description            the description
+	 * @param status            the status
 	 */
-	public StoryEntity(String title, Integer estimate, String description, StoryStatus status)
+	public StoryEntity(String title, Integer storyPoints, String description, StoryStatus status)
 	{
 		this.title = title;
 		this.description = description;
-		this.estimate = estimate;
+		this.storyPoints = storyPoints;
 		this.status = status;
 	}
 
@@ -164,24 +160,23 @@ public class StoryEntity extends WebutilsExtendableEntity
 	}
 
 	/**
-	 * Gets the estimate.
+	 * Gets the story points.
 	 *
-	 * @return the estimate
+	 * @return the story points
 	 */
-	public Integer getEstimate()
+	public Integer getStoryPoints()
 	{
-		return estimate;
+		return storyPoints;
 	}
 
 	/**
-	 * Sets the estimate.
+	 * Sets the story points.
 	 *
-	 * @param estimate
-	 *            the new estimate
+	 * @param storyPoints the new story points
 	 */
-	public void setEstimate(Integer estimate)
+	public void setStoryPoints(Integer storyPoints)
 	{
-		this.estimate = estimate;
+		this.storyPoints = storyPoints;
 	}
 
 	/**
@@ -281,7 +276,8 @@ public class StoryEntity extends WebutilsExtendableEntity
 	/**
 	 * Sets the sprint.
 	 *
-	 * @param sprint the new sprint
+	 * @param sprint
+	 *            the new sprint
 	 */
 	public void setSprint(SprintEntity sprint)
 	{
@@ -289,23 +285,23 @@ public class StoryEntity extends WebutilsExtendableEntity
 	}
 
 	/**
-	 * Gets the project id.
+	 * Gets the project entity.
 	 *
-	 * @return the project id
+	 * @return the project entity
 	 */
-	public ProjectEntity getProjectId() 
+	public ProjectEntity getProjectEntity()
 	{
-		return projectId;
+		return projectEntity;
 	}
 
 	/**
-	 * Sets the project id.
+	 * Sets the project entity.
 	 *
-	 * @param projectId the new project id
+	 * @param projectEntity the new project entity
 	 */
-	public void setProjectId(ProjectEntity projectId)
+	public void setProjectEntity(ProjectEntity projectEntity)
 	{
-		this.projectId = projectId;
+		this.projectEntity = projectEntity;
 	}
 
 	/**
@@ -321,7 +317,8 @@ public class StoryEntity extends WebutilsExtendableEntity
 	/**
 	 * Sets the tasks.
 	 *
-	 * @param tasks the new tasks
+	 * @param tasks
+	 *            the new tasks
 	 */
 	public void setTasks(List<TaskEntity> tasks)
 	{

@@ -2,12 +2,12 @@ package com.agilepro.controller.project;
 
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_DELETE;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_DELETE_ALL;
-import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_ALL;
+import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_SAVE;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_UPDATE;
 import static com.agilepro.commons.IAgileproActions.ACTION_PREFIX_STORY;
-import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_SPRINT;
+import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_STORY_SPRINT;
 import static com.agilepro.commons.IAgileproActions.ACTION_TYPE_READ_STORY_PROJECT_ID;
 import static com.agilepro.commons.IAgileproActions.PARAM_ID;
 
@@ -101,7 +101,7 @@ public class StoryController extends BaseController implements IStoryController
 
 		return new BasicReadResponse<StoryModel>(storyModel);
 	}
-
+	
 	/**
 	 * Read the list of stories.
 	 *
@@ -113,9 +113,9 @@ public class StoryController extends BaseController implements IStoryController
 	@Authorization(entityIdExpression = "parameters[0]", roles = { UserRole.BACKLOG_EDIT, UserRole.CUSTOMER_SUPER_USER })
 	@RequestMapping(value = "/readAll", method = RequestMethod.GET)
 	@ResponseBody
-	public BasicReadResponse<List<StoryModel>> fetchAllStory(@RequestParam(value = "storyTitle", required = false) String storyTitle)
+	public BasicReadResponse<List<StoryModel>> fetchAllStory(@RequestParam(value = "projectId", required = true) Long projectId)
 	{
-		return new BasicReadResponse<List<StoryModel>>(storyService.fetchAllStory(storyTitle));
+		return new BasicReadResponse<List<StoryModel>>(storyService.fetchAllStory(projectId));
 	}
 	
 	/**
@@ -137,9 +137,9 @@ public class StoryController extends BaseController implements IStoryController
 	 * @see com.agilepro.commons.controllers.project.IStoryController#fetchStoryBySprintId(java.lang.Long)
 	 */
 	@Override
-	@ActionName(ACTION_TYPE_READ_SPRINT)
+	@ActionName(ACTION_TYPE_READ_STORY_SPRINT)
 	@Authorization(entityIdExpression = "parameters[0]", roles = { UserRole.BACKLOG_EDIT, UserRole.CUSTOMER_SUPER_USER })
-	@RequestMapping(value = "/readSprints", method = RequestMethod.GET)
+	@RequestMapping(value = "/readStoriesBySprint", method = RequestMethod.GET)
 	@ResponseBody
 	public BasicReadResponse<List<StoryModel>> fetchStoryBySprintId(@RequestParam(value = "sprintId", required = true) Long sprintId)
 	{

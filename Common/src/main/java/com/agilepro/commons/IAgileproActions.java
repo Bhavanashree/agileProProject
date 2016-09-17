@@ -293,7 +293,7 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	/**
 	 * The action type readSprints.
 	 */
-	public String ACTION_TYPE_READ_SPRINT = "readSprints";
+	public String ACTION_TYPE_READ_STORY_SPRINT = "readStoriesBySprint";
 	
 	/**
 	 * The action type readProjectid.
@@ -964,7 +964,7 @@ public interface IAgileproActions extends IWebUtilsActionConstants
 	/**
 	 *  The action sprint read.
 	 **/
-	public String ACTION_STORY_READSPRINT = ACTION_PREFIX_STORY + "." + ACTION_TYPE_READ_SPRINT;
+	public String ACTION_STORY_READSPRINT = ACTION_PREFIX_STORY + "." + ACTION_TYPE_READ_STORY_SPRINT;
 
 	/**
 	 * The action backlog update.

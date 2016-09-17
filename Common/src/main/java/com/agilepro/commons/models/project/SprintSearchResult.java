@@ -15,7 +15,6 @@ public class SprintSearchResult extends AbstractExtendedSearchResult
 	/**
 	 * Id.
 	 */
-
 	@Field(value = "id")
 	private long id;
 
